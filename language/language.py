@@ -13,6 +13,7 @@ fasttext.FastText.eprint = lambda x: None
 model_loc = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__), "lid.176.ftz"))
 
+
 # Class for language processing
 class Language:
 

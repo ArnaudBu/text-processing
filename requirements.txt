@@ -4,3 +4,4 @@ pandas               == 1.0.3
 sparse-dot-topn      == 0.2.8
 scikit-learn         == 0.22.1
 spacy                == 3.0.3
+sentence-transformers== 0.4.1.2

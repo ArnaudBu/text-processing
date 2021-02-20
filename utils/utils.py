@@ -9,11 +9,14 @@ import re
 from unidecode import unidecode
 import spacy
 
+# nlp model
 nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
 
+# stopwords
 stp = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they", "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do", "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while", "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before", "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again", "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each", "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
 
+# Create a logger
 def create_logger(logger_name, type="stream", file="error.log"):
     """
     Creates a logging object and returns it
@@ -31,9 +34,11 @@ def create_logger(logger_name, type="stream", file="error.log"):
     return logger
 
 
+# Exception handler
 def exception(function):
     """
-    A decorator that wraps the passed in function and logs exceptions should one occur
+    A decorator that wraps the passed in function and logs
+    exceptions should one occur
     """
     @functools.wraps(function)
     def wrapper(*args, **kwargs):
@@ -47,6 +52,8 @@ def exception(function):
             # raise
     return wrapper
 
+
+# Clean string
 def cln(s, rm=r'!"#$%&\'()*+-./:;<=>?@[\]^_`{|}~'):
     """
     Clean string and remove some characters
@@ -57,24 +64,32 @@ def cln(s, rm=r'!"#$%&\'()*+-./:;<=>?@[\]^_`{|}~'):
                   strip().
                   replace('\n', ' '))
 
-def rmv_stp(s):
+
+# Remove stop words
+def rmv_stp(s, stp=stp):
     """
-    Clean string and remove some characters
+    Remove stop words
     """
     return ' '.join([b for b in s.split(" ") if b not in stp])
 
+
+# Remove digits
 def rmv_digits(s):
     """
     Remove words with digits from string
     """
     return ' '.join(b for b in s.split(" ") if not any(c.isdigit() for c in b))
 
+
+# Remove small words
 def rmv_smol_wds(s, n=1):
     """
     Remove words with less than n characters
     """
     return ' '.join([b for b in s.split(" ") if len(b) > n])
 
+
+# Lemmatize
 def lemmatize(s):
     """
     Lemmatize a string

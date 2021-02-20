@@ -8,10 +8,10 @@ import numpy as np
 from scipy.sparse import csr_matrix
 import pandas as pd
 
-from utils.utils import cln
+from utils import cln
+
 
 # N-grams for vectorizer
-
 def ngrms(s, n=[2,3], sp_val=' '):
     a = []
     for i in n:
@@ -19,8 +19,8 @@ def ngrms(s, n=[2,3], sp_val=' '):
         a += [''.join(c) for c in b if sp_val not in c] * i
     return a
 
-# Matrix multiplication with top values
 
+# Matrix multiplication with top values
 def awsm_cossim_top(A, B, ntop=10, lower_bound=0):
     A = A.tocsr()
     B = B.tocsr()
@@ -43,8 +43,8 @@ def awsm_cossim_top(A, B, ntop=10, lower_bound=0):
         indptr, indices, data)
     return csr_matrix((data, indices, indptr), shape=(M, N))
 
-# Vectorizer
 
+# Vectorizer
 def vctrz(n, fn_cln=cln, fn_anl=ngrms):
     n_clean = [fn_cln(a) for a in n]
     v = TfidfVectorizer(analyzer=fn_anl)
@@ -52,8 +52,8 @@ def vctrz(n, fn_cln=cln, fn_anl=ngrms):
     mat = v.transform(n_clean)
     return n_clean, v, mat
 
-# Matching
 
+# Matching
 def match(n, v, mat, ns, t=10, fn_cln=cln):
     n_cl = [fn_cln(a) for a in n]
     d = v.transform(n_cl)

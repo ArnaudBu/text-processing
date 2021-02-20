@@ -3,7 +3,6 @@
 
 import fasttext
 import re
-from unidecode import unidecode
 import os
 import sys
 
@@ -13,9 +12,11 @@ except:
     sys.path.append("..")
     from utils import cln, rmv_digits, rmv_stp, rmv_smol_wds, lemmatize
 
+
 # Cleaning function
 def cl(s):
-    return cln(rmv_smol_wds(rmv_digits(lemmatize(rmv_stp(s)))))
+    return rmv_smol_wds(rmv_digits(lemmatize(rmv_stp(cln(s)))))
+
 
 # Disable fasttext warnnig
 fasttext.FastText.eprint = lambda x: None
@@ -24,11 +25,13 @@ fasttext.FastText.eprint = lambda x: None
 model_loc = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__), "classif.ftz"))
 
+
 # Print fasttext results
 def print_results(N, p, r):
     print("N\t" + str(N))
     print("P@{}\t{:.5f}".format(1, p))
     print("R@{}\t{:.5f}".format(1, r))
+
 
 # Default train parameters
 train_parameters = {
@@ -50,6 +53,7 @@ train_parameters = {
     'seed': 0
  }
 
+
 # Get parameters from model
 def get_model_parameters(model):
     args_getter = model.f.getArgs()
@@ -63,12 +67,12 @@ def get_model_parameters(model):
 
     return parameters
 
+
 # Train the model with autotune
 def train():
     model = fasttext.train_supervised(input=r"data/train.txt",
                                       autotuneValidationFile=r"data/test.txt",
                                       autotuneDuration=60*60)
-                                #   autotuneModelSize="100M")
 
     print_results(*model.test(r"data/test.txt"))
     print_results(*model.test(r"data/train.txt"))
@@ -76,7 +80,8 @@ def train():
     train_parameters = get_model_parameters(model)
 
     model = fasttext.train_supervised(input=r"data/data.txt",
-                                      **train_parameters)
+                                      **train_parameters
+                                      )
 
     model.save_model("classif.ftz")
     print_results(*model.test(r"data/data.txt"))
@@ -88,7 +93,7 @@ class Classr:
 
     def __init__(self, mdl_path=model_loc):
         """
-        Classifier used in order to predict if a name belong to an individual or a company.
+        Classifier
 
         Attributes
         ----------
@@ -117,7 +122,8 @@ class Classr:
         Returns
         -------
         dictionnary
-            Dictionnary of the input strings with a tuple as value containing the classification and the score associated to this classification.
+            Dictionnary of the input strings with a tuple as value containing
+            the classification and the score associated to this classification.
         """
         if type(n) is not list:
             n = [n]
@@ -129,6 +135,7 @@ class Classr:
                 l[re.sub("__label__", "", r[0][i][j])] = r[1][i][j]
             d[n[i]] = l
         return d
+
 
 if __name__ == "__main__":
     train()

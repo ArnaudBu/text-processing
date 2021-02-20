@@ -71,5 +71,6 @@ class WordRep:
         d = self.model.get_word_vector(n)
         return d
 
+
 if __name__ == "__main__":
     train()
