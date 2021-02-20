@@ -121,7 +121,7 @@ w.nearest("gold", k=3) # 3 nearest words from gold
 
 ## String similarity with tf-idf
 
-> Creation of a string matching tool based on tf-idf. In this example we n
+> Creation of a string matching tool based on tf-idf.
 
 ```python
 from similarity import vctrz, match
