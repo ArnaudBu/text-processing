@@ -2,5 +2,5 @@ __pycache__/
 reuters/
 data/
 *.bin
-*.ftz
+classif.ftz
 *.csv
