@@ -5,6 +5,7 @@ import fasttext
 import re
 import os
 import sys
+from cleantext import clean
 
 try:
     from utils import cln, rmv_digits, rmv_stp, rmv_smol_wds, lemmatize
@@ -15,7 +16,24 @@ except:
 
 # Cleaning function
 def cl(s):
-    return rmv_smol_wds(rmv_digits(lemmatize(rmv_stp(cln(s)))))
+    # return rmv_smol_wds(rmv_digits(rmv_stp(cln(s))))
+    a = clean(s,
+              fix_unicode=True,
+              to_ascii=True,
+              lower=True,
+              no_line_breaks=True,
+              no_urls=True,
+              no_emails=True,
+              no_phone_numbers=True,
+              no_numbers=True,
+              no_emoji=True,
+              replace_with_url=" ",
+              replace_with_email=" ",
+              replace_with_phone_number=" ",
+              replace_with_number=" ",
+              lang="en"
+              )
+    return rmv_smol_wds(lemmatize(rmv_stp(a)))
 
 
 # Disable fasttext warnnig
@@ -107,7 +125,7 @@ class Classr:
         """
         self.model = fasttext.load_model(mdl_path)
 
-    def predict(self, n, k=1):
+    def predict(self, n, k=1, cl=cl):
         """
         Classifies the input.
 
@@ -118,6 +136,9 @@ class Classr:
 
         k : int
             Number of class to returns
+
+        cl: function
+            Cleaning function
 
         Returns
         -------
