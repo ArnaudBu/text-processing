@@ -3,4 +3,4 @@
 
 from .tfidf import vctrz, match, ngrms
 
-from .emb import WordRep
+from .emb import WordRep, SemSearch

@@ -117,6 +117,7 @@ import fasttext.util
 fasttext.util.download_model('en', if_exists='ignore')  # Get english model
 w = WordRep('cc.en.300.bin') # Load from new model
 w.nearest("gold", k=3) # 3 nearest words from gold
+w.encode("gold mine") # possibility to encode a complete sentence
 ```
 
 ## String similarity with tf-idf
@@ -139,4 +140,44 @@ a,b,c = vctrz(sentences) # create vector representation
 
 d = match(sentences, b, c, sentences, t=2) # match sentences with 2 closest one
 d[d['sim_cosine'] < 0.99]
+```
+
+## Semantic search
+
+> Possibility to index documents to perform semantic search
+
+```python
+from similarity import WordRep, SemSearch # Import functions
+import pandas as pd # pandas to load data
+
+w = WordRep("similarity/emb.bin") # declare model for embeddings
+
+data = pd.read_csv("data.csv") # import data
+
+s = SemSearch(data['txt'], mdl=w) # declare semantic search engine with the model
+
+res = s.search("gold mine", k=100) # perform a search with 100 results
+res
+s.explain("gold mine", res['sentence'][0], threshold=0.4)
+# explain the sentence against the terms by finding words whose cosine
+# similarity is higher than the threshold
+s.explain_search(res) # apply the prior function over all the results
+```
+
+> It is also possible to use pre trained sentence embeddings from the sentence transformers package. However, it is not possible to use the explainability feature.
+
+```python
+from similarity import SemSearch # Import functions
+import pandas as pd # pandas to load data
+
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer('distilbert-base-nli-mean-tokens') # declare model for embeddings
+
+data = pd.read_csv("data.csv") # import data
+
+s = SemSearch(data['txt'], mdl=w) # declare semantic search engine with the model
+
+res = s.search("gold mine", k=100) # perform a search with 100 results
+res
 ```
